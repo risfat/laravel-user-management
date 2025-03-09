@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Web\UserController;
 
 // Redirect authenticated users to dashboard when they visit the root URL
 Route::get('/', function () {
