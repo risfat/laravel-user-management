@@ -1,112 +1,264 @@
+
 # API Documentation
 
+## Base URL
+`http://127.0.0.1:8000/api`
+
 ## Authentication
+This API uses Laravel Sanctum for authentication. After logging in, include the token in the `Authorization` header of your requests:
 
-### Register
-- **URL:** `/api/register`
-- **Method:** `POST`
-- **Description:** Register a new user
-- **Body Parameters:**
-  - `name` (string, required): User's full name
-  - `email` (string, required): User's email address
-  - `password` (string, required): User's password
-  - `password_confirmation` (string, required): Confirm password
-- **Success Response:**
-  - **Code:** 201
-  - **Content:** `{ "message": "User registered successfully", "user": {...}, "token": "..." }`
+```
+Authorization: Bearer <your_token_here>
+```
 
-### Login
-- **URL:** `/api/login`
-- **Method:** `POST`
-- **Description:** Authenticate a user and receive a token
-- **Body Parameters:**
-  - `email` (string, required): User's email address
-  - `password` (string, required): User's password
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `{ "message": "Login successful", "user": {...}, "token": "..." }`
+## Endpoints
 
-### Logout
-- **URL:** `/api/logout`
-- **Method:** `POST`
-- **Description:** Logout the authenticated user
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `{ "message": "Logged out successfully" }`
+### 1. Register User
+- **URL**: `/register`
+- **Method**: POST
+- **Description**: Register a new user
+- **Request Body**:
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }
+  ```
+- **Success Response**:
+  - **Code**: 201
+  - **Content**:
+    ```json
+    {
+      "message": "User registered successfully",
+      "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "created_at": "2023-03-09T15:30:00.000000Z",
+        "updated_at": "2023-03-09T15:30:00.000000Z"
+      },
+      "token": "1|abcdefghijklmnopqrstuvwxyz123456"
+    }
+    ```
 
-### Get Authenticated User
-- **URL:** `/api/user`
-- **Method:** `GET`
-- **Description:** Get the currently authenticated user's details
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `{ "id": 1, "name": "John Doe", "email": "john@example.com", ... }`
+### 2. Login
+- **URL**: `/login`
+- **Method**: POST
+- **Description**: Authenticate a user and receive a token
+- **Request Body**:
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "message": "Login successful",
+      "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "created_at": "2023-03-09T15:30:00.000000Z",
+        "updated_at": "2023-03-09T15:30:00.000000Z"
+      },
+      "token": "2|abcdefghijklmnopqrstuvwxyz123456"
+    }
+    ```
 
-## User Management
+### 3. Get Authenticated User
+- **URL**: `/user`
+- **Method**: GET
+- **Description**: Get the currently authenticated user's information
+- **Authentication**: Required
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "created_at": "2023-03-09T15:30:00.000000Z",
+      "updated_at": "2023-03-09T15:30:00.000000Z"
+    }
+    ```
 
-### List Users
-- **URL:** `/api/users`
-- **Method:** `GET`
-- **Description:** Get a list of all users
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `[ { "id": 1, "name": "John Doe", "email": "john@example.com", ... }, ... ]`
+### 4. Logout
+- **URL**: `/logout`
+- **Method**: POST
+- **Description**: Invalidate the user's token
+- **Authentication**: Required
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "message": "Logged out successfully"
+    }
+    ```
 
-### Get User
-- **URL:** `/api/users/{id}`
-- **Method:** `GET`
-- **Description:** Get details of a specific user
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `{ "id": 1, "name": "John Doe", "email": "john@example.com", ... }`
+### 5. User Management
 
-### Create User
-- **URL:** `/api/users`
-- **Method:** `POST`
-- **Description:** Create a new user
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Body Parameters:**
-  - `name` (string, required): User's full name
-  - `email` (string, required): User's email address
-  - `password` (string, required): User's password
-- **Success Response:**
-  - **Code:** 201
-  - **Content:** `{ "message": "User created successfully", "user": {...} }`
+#### 5.1 List Users
+- **URL**: `/users`
+- **Method**: GET
+- **Description**: Get a list of all users
+- **Authentication**: Required
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "data": [
+        {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "created_at": "2023-03-09T15:30:00.000000Z",
+          "updated_at": "2023-03-09T15:30:00.000000Z"
+        },
+        {
+          "id": 2,
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "created_at": "2023-03-09T15:35:00.000000Z",
+          "updated_at": "2023-03-09T15:35:00.000000Z"
+        }
+      ]
+    }
+    ```
 
-### Update User
-- **URL:** `/api/users/{id}`
-- **Method:** `PUT/PATCH`
-- **Description:** Update an existing user
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Body Parameters:**
-  - `name` (string, optional): User's full name
-  - `email` (string, optional): User's email address
-  - `password` (string, optional): User's new password
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `{ "message": "User updated successfully", "user": {...} }`
+#### 5.2 Get User
+- **URL**: `/users/{id}`
+- **Method**: GET
+- **Description**: Get a specific user's information
+- **Authentication**: Required
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "data": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "created_at": "2023-03-09T15:30:00.000000Z",
+        "updated_at": "2023-03-09T15:30:00.000000Z"
+      }
+    }
+    ```
 
-### Delete User
-- **URL:** `/api/users/{id}`
-- **Method:** `DELETE`
-- **Description:** Delete a user
-- **Headers:**
-  - `Authorization: Bearer {token}`
-- **Success Response:**
-  - **Code:** 200
-  - **Content:** `{ "message": "User deleted successfully" }`
+#### 5.3 Create User
+- **URL**: `/users`
+- **Method**: POST
+- **Description**: Create a new user
+- **Authentication**: Required
+- **Request Body**:
+  ```json
+  {
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }
+  ```
+- **Success Response**:
+  - **Code**: 201
+  - **Content**:
+    ```json
+    {
+      "message": "User created successfully",
+      "data": {
+        "id": 3,
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "created_at": "2023-03-09T15:40:00.000000Z",
+        "updated_at": "2023-03-09T15:40:00.000000Z"
+      }
+    }
+    ```
 
-## Notes
-- All protected routes require authentication using a bearer token.
-- Proper error responses will be returned for invalid requests or unauthorized access.
-- Pagination may be implemented for list endpoints in the future.
+#### 5.4 Update User
+- **URL**: `/users/{id}`
+- **Method**: PUT/PATCH
+- **Description**: Update a user's information
+- **Authentication**: Required
+- **Request Body**:
+  ```json
+  {
+    "name": "Alice Johnson Updated",
+    "email": "alice.updated@example.com"
+  }
+  ```
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "message": "User updated successfully",
+      "data": {
+        "id": 3,
+        "name": "Alice Johnson Updated",
+        "email": "alice.updated@example.com",
+        "created_at": "2023-03-09T15:40:00.000000Z",
+        "updated_at": "2023-03-09T15:45:00.000000Z"
+      }
+    }
+    ```
+
+#### 5.5 Delete User
+- **URL**: `/users/{id}`
+- **Method**: DELETE
+- **Description**: Delete a user
+- **Authentication**: Required
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "message": "User deleted successfully"
+    }
+    ```
+
+## Error Responses
+
+All endpoints may return the following error responses:
+
+- **401 Unauthorized**:
+  ```json
+  {
+    "message": "Unauthenticated."
+  }
+  ```
+
+- **403 Forbidden**:
+  ```json
+  {
+    "message": "You do not have permission to perform this action."
+  }
+  ```
+
+- **404 Not Found**:
+  ```json
+  {
+    "message": "Resource not found."
+  }
+  ```
+
+- **422 Unprocessable Entity**:
+  ```json
+  {
+    "message": "The given data was invalid.",
+    "errors": {
+      "field_name": [
+        "Error message for the field"
+      ]
+    }
+  }
+  ```
