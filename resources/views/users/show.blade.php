@@ -16,7 +16,6 @@
                             </div>
                             <div class="col-md-8">
                                 <h2 class="mb-3">{{ $user->name }}</h2>
-                                <p class="text-muted mb-2">{{ $user->username }}</p>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span><i class="fas fa-envelope me-2"></i> Email</span>
@@ -25,6 +24,38 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span><i class="fas fa-user-tag me-2"></i> Role</span>
                                         <span class="badge bg-info text-dark">{{ $user->getRoleNames()->first() }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-phone me-2"></i> Phone</span>
+                                        <span>{{ $user->phone ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-map-marker-alt me-2"></i> Address</span>
+                                        <span>{{ $user->address ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-city me-2"></i> City</span>
+                                        <span>{{ $user->city ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-flag me-2"></i> State</span>
+                                        <span>{{ $user->state ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-globe me-2"></i> Country</span>
+                                        <span>{{ $user->country ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-map-pin me-2"></i> Zip Code</span>
+                                        <span>{{ $user->zip_code ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-birthday-cake me-2"></i> Date of Birth</span>
+                                        <span>{{ $user->date_of_birth ? $user->date_of_birth->format('M d, Y') : 'N/A' }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-venus-mars me-2"></i> Gender</span>
+                                        <span>{{ ucfirst($user->gender ?? 'N/A') }}</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span><i class="fas fa-calendar-alt me-2"></i> Registered</span>
@@ -43,6 +74,12 @@
                                 </ul>
                             </div>
                         </div>
+                        @if($user->bio)
+                            <div class="mt-4">
+                                <h4 class="mb-2">Bio</h4>
+                                <p class="text-muted">{{ $user->bio }}</p>
+                            </div>
+                        @endif
                     </div>
                     <div class="card-footer bg-white">
                         <div class="d-flex justify-content-end gap-2">

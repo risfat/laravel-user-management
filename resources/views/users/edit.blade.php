@@ -24,30 +24,12 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="phone" class="form-label">Phone</label>
-                                    <input type="tel" class="form-control" name="phone" id="phone" value="{{ old('phone', $user->phone) }}">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="date_of_birth" class="form-label">Date of Birth</label>
-                                    <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth ? $user->date_of_birth->format('Y-m-d') : '') }}">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
                                     <label for="password" class="form-label">New Password (optional)</label>
                                     <input type="password" class="form-control" name="password" id="password">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="password_confirmation" class="form-label">Confirm New Password</label>
                                     <input type="password" class="form-control" name="password_confirmation" id="password_confirmation">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="address" class="form-label">Address</label>
-                                    <textarea class="form-control" name="address" id="address" rows="3">{{ old('address', $user->address) }}</textarea>
                                 </div>
                             </div>
 
@@ -61,6 +43,62 @@
                                         </option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" name="phone" id="phone" value="{{ old('phone', $user->phone) }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" name="address" id="address" rows="3">{{ old('address', $user->address) }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" class="form-control" name="city" id="city" value="{{ old('city', $user->city) }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state" class="form-label">State</label>
+                                    <input type="text" class="form-control" name="state" id="state" value="{{ old('state', $user->state) }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" name="country" id="country" value="{{ old('country', $user->country) }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="zip_code" class="form-label">Zip Code</label>
+                                    <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{ old('zip_code', $user->zip_code) }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth ? $user->date_of_birth->format('Y-m-d') : '') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" name="gender" id="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="male" {{ old('gender', $user->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ old('gender', $user->gender) === 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="other" {{ old('gender', $user->gender) === 'other' ? 'selected' : '' }}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="bio" class="form-label">Bio</label>
+                                    <textarea class="form-control" name="bio" id="bio" rows="4">{{ old('bio', $user->bio) }}</textarea>
                                 </div>
                             </div>
 

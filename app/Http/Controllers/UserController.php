@@ -45,17 +45,28 @@ class UserController extends Controller
             'role' => 'required|string|exists:roles,name',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'zip_code' => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string|in:male,female,other',
+            'bio' => 'nullable|string|max:1000',
         ]);
 
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
-            'role' => $validatedData['role'],
             'phone' => $validatedData['phone'],
             'address' => $validatedData['address'],
+            'city' => $validatedData['city'],
+            'state' => $validatedData['state'],
+            'country' => $validatedData['country'],
+            'zip_code' => $validatedData['zip_code'],
             'date_of_birth' => $validatedData['date_of_birth'],
+            'gender' => $validatedData['gender'],
+            'bio' => $validatedData['bio'],
         ]);
 
         // Assign role to user
@@ -93,7 +104,13 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'state' => ['nullable', 'string', 'max:100'],
+            'country' => ['nullable', 'string', 'max:100'],
+            'zip_code' => ['nullable', 'string', 'max:20'],
             'date_of_birth' => ['nullable', 'date'],
+            'gender' => ['nullable', 'string', 'in:male,female,other'],
+            'bio' => ['nullable', 'string', 'max:1000'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', Rule::in(Role::pluck('name'))],
         ]);
@@ -101,7 +118,13 @@ class UserController extends Controller
         $user->name = $validatedData['name'];
         $user->phone = $validatedData['phone'];
         $user->address = $validatedData['address'];
+        $user->city = $validatedData['city'];
+        $user->state = $validatedData['state'];
+        $user->country = $validatedData['country'];
+        $user->zip_code = $validatedData['zip_code'];
         $user->date_of_birth = $validatedData['date_of_birth'];
+        $user->gender = $validatedData['gender'];
+        $user->bio = $validatedData['bio'];
 
         if (!empty($validatedData['password'])) {
             $user->password = Hash::make($validatedData['password']);
