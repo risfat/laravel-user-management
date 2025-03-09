@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             'country' => $faker->country,
             'zip_code' => $faker->postcode,
             'date_of_birth' => $faker->date('Y-m-d', '-18 years'),
-            'gender' => $faker->randomElement(['male', 'female', 'other']),
+            'gender' => 'male',
             'bio' => $faker->paragraph,
             'status' => true,
             'email_verified_at' => now(),
