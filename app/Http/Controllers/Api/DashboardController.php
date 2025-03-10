@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -15,6 +16,7 @@ class DashboardController extends Controller
             'monthlyUsers' => $this->getMonthlyUserRegistrations(),
             'weeklyActivity' => $this->getWeeklyUserActivity(),
             'stats' => $this->getUserStatistics(),
+            'userName' => auth()->user()->name
         ];
 
         return response()->json($data);
@@ -22,44 +24,74 @@ class DashboardController extends Controller
 
     private function getMonthlyUserRegistrations()
     {
-        return User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'), DB::raw('count(*) as count'))
-            ->groupBy('month')
-            ->orderBy('month', 'desc')
-            ->take(9)
-            ->get()
-            ->reverse()
-            ->values();
+        $months = collect([]);
+        $userCounts = collect([]);
+
+        // Get data for the last 9 months
+        for ($i = 8; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $months->push($date->format('M'));
+
+            $count = User::whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+
+            $userCounts->push($count);
+        }
+
+        return [
+            'months' => $months,
+            'counts' => $userCounts
+        ];
     }
 
     private function getWeeklyUserActivity()
     {
-        // This is a placeholder. You might need to implement actual user activity tracking.
-        $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        $days = collect([]);
+        $logins = collect([]);
+        $registrations = collect([]);
+
+        // Get data for each day of the past week
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $days->push($date->format('D'));
+
+
+            // This is just sample data
+            $logins->push(rand(30, 70));
+
+            $count = User::whereDate('created_at', $date->toDateString())->count();
+            $registrations->push($count);
+        }
+
         return [
-            'logins' => array_map(function() { return rand(40, 100); }, $days),
-            'actions' => array_map(function() { return rand(70, 150); }, $days),
+            'days' => $days,
+            'logins' => $logins,
+            'registrations' => $registrations
         ];
     }
 
     private function getUserStatistics()
     {
         return [
-            'totalUsers' => User::count(),
-            'activeUsers' => User::where('email_verified_at', '!=', null)->count(),
-            'newUsersThisMonth' => User::whereMonth('created_at', now()->month)->count(),
-            'growthRate' => $this->calculateGrowthRate(),
+            'total' => User::count(),
+            'verified' => User::whereNotNull('email_verified_at')->count(),
+            'unverified' => User::whereNull('email_verified_at')->count(),
+            'thisMonth' => User::whereMonth('created_at', now()->month)->count(),
+            'lastMonth' => User::whereMonth('created_at', now()->subMonth()->month)->count(),
+            'growth' => $this->calculateGrowthRate()
         ];
     }
 
     private function calculateGrowthRate()
     {
-        $currentMonthUsers = User::whereMonth('created_at', now()->month)->count();
-        $lastMonthUsers = User::whereMonth('created_at', now()->subMonth()->month)->count();
+        $thisMonth = User::whereMonth('created_at', now()->month)->count();
+        $lastMonth = User::whereMonth('created_at', now()->subMonth()->month)->count();
 
-        if ($lastMonthUsers == 0) {
-            return 100; // Avoid division by zero
+        if ($lastMonth == 0) {
+            return 100; // If there were no users last month, growth is 100%
         }
 
-        return round((($currentMonthUsers - $lastMonthUsers) / $lastMonthUsers) * 100, 2);
+        return round((($thisMonth - $lastMonth) / $lastMonth) * 100, 1);
     }
 }
