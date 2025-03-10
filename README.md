@@ -1,264 +1,291 @@
 
 # API Documentation
 
-## Base URL
-`http://127.0.0.1:8000/api`
-
 ## Authentication
-This API uses Laravel Sanctum for authentication. After logging in, include the token in the `Authorization` header of your requests:
+
+### Register
+
+Register a new user.
+
+- **URL:** `/api/register`
+- **Method:** `POST`
+- **Auth required:** No
+
+#### Request Body
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "password_confirmation": "string"
+}
+```
+
+#### Success Response
+
+- **Code:** 201 Created
+- **Content:**
+
+```json
+{
+  "user": {
+    "id": "integer",
+    "name": "string",
+    "email": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "token": "string"
+}
+```
+
+### Login
+
+Authenticate a user and receive a token.
+
+- **URL:** `/api/login`
+- **Method:** `POST`
+- **Auth required:** No
+
+#### Request Body
+
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+{
+  "user": {
+    "id": "integer",
+    "name": "string",
+    "email": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "token": "string"
+}
+```
+
+### Logout
+
+Log out the authenticated user.
+
+- **URL:** `/api/logout`
+- **Method:** `POST`
+- **Auth required:** Yes
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+## User
+
+### Get Current User
+
+Retrieve the authenticated user's information.
+
+- **URL:** `/api/user`
+- **Method:** `GET`
+- **Auth required:** Yes
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "email": "string",
+  "created_at": "timestamp",
+  "updated_at": "timestamp"
+}
+```
+
+## User Management
+
+### List Users
+
+Retrieve a list of all users.
+
+- **URL:** `/api/users`
+- **Method:** `GET`
+- **Auth required:** Yes
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+[
+  {
+    "id": "integer",
+    "name": "string",
+    "email": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  ...
+]
+```
+
+### Get User
+
+Retrieve a specific user's information.
+
+- **URL:** `/api/users/{id}`
+- **Method:** `GET`
+- **Auth required:** Yes
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "email": "string",
+  "created_at": "timestamp",
+  "updated_at": "timestamp"
+}
+```
+
+### Create User
+
+Create a new user.
+
+- **URL:** `/api/users`
+- **Method:** `POST`
+- **Auth required:** Yes
+
+#### Request Body
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "password_confirmation": "string"
+}
+```
+
+#### Success Response
+
+- **Code:** 201 Created
+- **Content:**
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "email": "string",
+  "created_at": "timestamp",
+  "updated_at": "timestamp"
+}
+```
+
+### Update User
+
+Update an existing user's information.
+
+- **URL:** `/api/users/{id}`
+- **Method:** `PUT`
+- **Auth required:** Yes
+
+#### Request Body
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "password_confirmation": "string"
+}
+```
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "email": "string",
+  "created_at": "timestamp",
+  "updated_at": "timestamp"
+}
+```
+
+### Delete User
+
+Delete a user.
+
+- **URL:** `/api/users/{id}`
+- **Method:** `DELETE`
+- **Auth required:** Yes
+
+#### Success Response
+
+- **Code:** 204 No Content
+
+
+## Dashboard
+
+### Get Dashboard Data
+
+Retrieve dashboard information including monthly user registrations, weekly user activity, and user statistics.
+
+- **URL:** `/api/dashboard`
+- **Method:** `GET`
+- **Auth required:** Yes
+
+#### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+
+```json
+{
+  "monthlyUsers": [
+    {
+      "month": "YYYY-MM",
+      "count": "integer"
+    },
+    ...
+  ],
+  "weeklyActivity": {
+    "logins": ["integer", "integer", "integer", "integer", "integer", "integer", "integer"],
+    "actions": ["integer", "integer", "integer", "integer", "integer", "integer", "integer"]
+  },
+  "stats": {
+    "totalUsers": "integer",
+    "activeUsers": "integer",
+    "newUsersThisMonth": "integer",
+    "growthRate": "float"
+  }
+}
 
 ```
-Authorization: Bearer <your_token_here>
-```
 
-## Endpoints
-
-### 1. Register User
-- **URL**: `/register`
-- **Method**: POST
-- **Description**: Register a new user
-- **Request Body**:
-  ```json
-  {
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "password123",
-    "password_confirmation": "password123"
-  }
-  ```
-- **Success Response**:
-  - **Code**: 201
-  - **Content**:
-    ```json
-    {
-      "message": "User registered successfully",
-      "user": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "created_at": "2023-03-09T15:30:00.000000Z",
-        "updated_at": "2023-03-09T15:30:00.000000Z"
-      },
-      "token": "1|abcdefghijklmnopqrstuvwxyz123456"
-    }
-    ```
-
-### 2. Login
-- **URL**: `/login`
-- **Method**: POST
-- **Description**: Authenticate a user and receive a token
-- **Request Body**:
-  ```json
-  {
-    "email": "john@example.com",
-    "password": "password123"
-  }
-  ```
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "message": "Login successful",
-      "user": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "created_at": "2023-03-09T15:30:00.000000Z",
-        "updated_at": "2023-03-09T15:30:00.000000Z"
-      },
-      "token": "2|abcdefghijklmnopqrstuvwxyz123456"
-    }
-    ```
-
-### 3. Get Authenticated User
-- **URL**: `/user`
-- **Method**: GET
-- **Description**: Get the currently authenticated user's information
-- **Authentication**: Required
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com",
-      "created_at": "2023-03-09T15:30:00.000000Z",
-      "updated_at": "2023-03-09T15:30:00.000000Z"
-    }
-    ```
-
-### 4. Logout
-- **URL**: `/logout`
-- **Method**: POST
-- **Description**: Invalidate the user's token
-- **Authentication**: Required
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "message": "Logged out successfully"
-    }
-    ```
-
-### 5. User Management
-
-#### 5.1 List Users
-- **URL**: `/users`
-- **Method**: GET
-- **Description**: Get a list of all users
-- **Authentication**: Required
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "data": [
-        {
-          "id": 1,
-          "name": "John Doe",
-          "email": "john@example.com",
-          "created_at": "2023-03-09T15:30:00.000000Z",
-          "updated_at": "2023-03-09T15:30:00.000000Z"
-        },
-        {
-          "id": 2,
-          "name": "Jane Smith",
-          "email": "jane@example.com",
-          "created_at": "2023-03-09T15:35:00.000000Z",
-          "updated_at": "2023-03-09T15:35:00.000000Z"
-        }
-      ]
-    }
-    ```
-
-#### 5.2 Get User
-- **URL**: `/users/{id}`
-- **Method**: GET
-- **Description**: Get a specific user's information
-- **Authentication**: Required
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "data": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "created_at": "2023-03-09T15:30:00.000000Z",
-        "updated_at": "2023-03-09T15:30:00.000000Z"
-      }
-    }
-    ```
-
-#### 5.3 Create User
-- **URL**: `/users`
-- **Method**: POST
-- **Description**: Create a new user
-- **Authentication**: Required
-- **Request Body**:
-  ```json
-  {
-    "name": "Alice Johnson",
-    "email": "alice@example.com",
-    "password": "password123",
-    "password_confirmation": "password123"
-  }
-  ```
-- **Success Response**:
-  - **Code**: 201
-  - **Content**:
-    ```json
-    {
-      "message": "User created successfully",
-      "data": {
-        "id": 3,
-        "name": "Alice Johnson",
-        "email": "alice@example.com",
-        "created_at": "2023-03-09T15:40:00.000000Z",
-        "updated_at": "2023-03-09T15:40:00.000000Z"
-      }
-    }
-    ```
-
-#### 5.4 Update User
-- **URL**: `/users/{id}`
-- **Method**: PUT/PATCH
-- **Description**: Update a user's information
-- **Authentication**: Required
-- **Request Body**:
-  ```json
-  {
-    "name": "Alice Johnson Updated",
-    "email": "alice.updated@example.com"
-  }
-  ```
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "message": "User updated successfully",
-      "data": {
-        "id": 3,
-        "name": "Alice Johnson Updated",
-        "email": "alice.updated@example.com",
-        "created_at": "2023-03-09T15:40:00.000000Z",
-        "updated_at": "2023-03-09T15:45:00.000000Z"
-      }
-    }
-    ```
-
-#### 5.5 Delete User
-- **URL**: `/users/{id}`
-- **Method**: DELETE
-- **Description**: Delete a user
-- **Authentication**: Required
-- **Success Response**:
-  - **Code**: 200
-  - **Content**:
-    ```json
-    {
-      "message": "User deleted successfully"
-    }
-    ```
-
-## Error Responses
-
-All endpoints may return the following error responses:
-
-- **401 Unauthorized**:
-  ```json
-  {
-    "message": "Unauthenticated."
-  }
-  ```
-
-- **403 Forbidden**:
-  ```json
-  {
-    "message": "You do not have permission to perform this action."
-  }
-  ```
-
-- **404 Not Found**:
-  ```json
-  {
-    "message": "Resource not found."
-  }
-  ```
-
-- **422 Unprocessable Entity**:
-  ```json
-  {
-    "message": "The given data was invalid.",
-    "errors": {
-      "field_name": [
-        "Error message for the field"
-      ]
-    }
-  }
-  ```

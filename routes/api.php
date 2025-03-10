@@ -19,4 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // User management routes
     Route::apiResource('users', UserController::class);
+
+    // Dashboard route
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 });
