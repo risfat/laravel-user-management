@@ -13,11 +13,21 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
+            $errorMessage = array_values($errors)[0][0]; // Get the first error message
+
+            return response()->json([
+                'message' => $errorMessage,
+                'errors' => $errors,
+            ], 422);
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -41,9 +51,9 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($request->only('email', 'password'))) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response()->json([
+                'message' => 'The provided credentials are incorrect.'
+            ], 401);
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
